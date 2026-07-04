@@ -5,15 +5,62 @@
 
 package com.grupo.models;
 
-/**
- *
- * @author GERMANOWENNINGARALDI
- */
 public class Livro {
+    private static int contador = 1;
+
     private int id;
     private String nome;
     private String autor;
     private int copias;
     private Status status;
     private String categoria;
+
+    public Livro(String nome, String autor, int copias, String categoria) {
+        this.id = contador++;
+        this.nome = nome;
+        this.autor = autor;
+        this.copias = copias;
+        this.categoria = categoria;
+        this.status = copias > 0 ? Status.DISPONIVEL : Status.RESERVADO;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public String getNome() {
+        return nome;
+    }
+
+    public String getAutor() {
+        return autor;
+    }
+
+    public int getCopias() {
+        return copias;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public String getCategoria() {
+        return categoria;
+    }
+
+    public void setCopias(int copias) {
+        this.copias = copias;
+        this.status = copias > 0 ? Status.DISPONIVEL : Status.RESERVADO;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "ID: " + id + " | Nome: " + nome + " | Autor: " + autor
+                + " | Categoria: " + categoria + " | Copias: " + copias
+                + " | Status: " + status;
+    }
 }
