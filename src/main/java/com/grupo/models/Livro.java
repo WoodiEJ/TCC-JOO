@@ -52,6 +52,18 @@ public class Livro extends Entidade {
         this.status = status;
     }
 
+    public void setNome(String nome) {
+        this.nome = nome;
+    }
+
+    public void setAutor(String autor) {
+        this.autor = autor;
+    }
+
+    public void setCategoria(String categoria) {
+        this.categoria = categoria;
+    }
+
     @Override
     public String getDescricao() {
         return "ID: " + id + " | Nome: " + nome + " | Autor: " + autor
