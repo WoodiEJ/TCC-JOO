@@ -1,18 +1,13 @@
 package com.grupo.models;
 
-public class Categoria {
+public class Categoria extends Entidade {
     private static int contador = 1;
 
-    private int id;
     private String nome;
 
     public Categoria(String nome) {
-        this.id = contador++;
+        super(contador++);
         this.nome = nome;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getNome() {
@@ -24,7 +19,7 @@ public class Categoria {
     }
 
     @Override
-    public String toString() {
+    public String getDescricao() {
         return "ID: " + id + " | Nome: " + nome;
     }
 }

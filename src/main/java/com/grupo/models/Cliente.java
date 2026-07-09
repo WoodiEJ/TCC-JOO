@@ -5,21 +5,16 @@
 
 package com.grupo.models;
 
-public class Cliente {
+public class Cliente extends Entidade {
     private static int contador = 1;
 
-    private int id;
     private String nome;
     private String cpf;
 
     public Cliente(String nome, String cpf) {
-        this.id = contador++;
+        super(contador++);
         this.nome = nome;
         this.cpf = cpf;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getNome() {
@@ -39,7 +34,7 @@ public class Cliente {
     }
 
     @Override
-    public String toString() {
+    public String getDescricao() {
         return "ID: " + id + " | Nome: " + nome + " | CPF: " + cpf;
     }
 }

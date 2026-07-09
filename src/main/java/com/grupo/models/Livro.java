@@ -5,10 +5,9 @@
 
 package com.grupo.models;
 
-public class Livro {
+public class Livro extends Entidade {
     private static int contador = 1;
 
-    private int id;
     private String nome;
     private String autor;
     private int copias;
@@ -16,16 +15,12 @@ public class Livro {
     private String categoria;
 
     public Livro(String nome, String autor, int copias, String categoria) {
-        this.id = contador++;
+        super(contador++);
         this.nome = nome;
         this.autor = autor;
         this.copias = copias;
         this.categoria = categoria;
         this.status = copias > 0 ? Status.DISPONIVEL : Status.RESERVADO;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public String getNome() {
@@ -58,7 +53,7 @@ public class Livro {
     }
 
     @Override
-    public String toString() {
+    public String getDescricao() {
         return "ID: " + id + " | Nome: " + nome + " | Autor: " + autor
                 + " | Categoria: " + categoria + " | Copias: " + copias
                 + " | Status: " + status;

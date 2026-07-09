@@ -1,28 +1,23 @@
 package com.grupo.models;
 
-import java.util.Date;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
-public class Reserva {
+public class Reserva extends Entidade {
     private static int contador = 1;
     private static final SimpleDateFormat FORMATO = new SimpleDateFormat("dd/MM/yyyy");
 
-    private int id;
     private int livro_id;
     private int cliente_id;
     private Date data_emprestimo;
     private Date data_volta;
 
     public Reserva(int livro_id, int cliente_id, Date data_emprestimo, Date data_volta) {
-        this.id = contador++;
+        super(contador++);
         this.livro_id = livro_id;
         this.cliente_id = cliente_id;
         this.data_emprestimo = data_emprestimo;
         this.data_volta = data_volta;
-    }
-
-    public int getId() {
-        return id;
     }
 
     public int getLivroId() {
@@ -42,7 +37,7 @@ public class Reserva {
     }
 
     @Override
-    public String toString() {
+    public String getDescricao() {
         return "ID: " + id + " | Livro ID: " + livro_id + " | Cliente ID: " + cliente_id
                 + " | Emprestimo: " + FORMATO.format(data_emprestimo)
                 + " | Devolucao: " + FORMATO.format(data_volta);
