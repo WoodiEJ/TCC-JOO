@@ -1,8 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-
 package com.grupo.models;
 
 public class Livro extends Entidade {
@@ -12,9 +7,9 @@ public class Livro extends Entidade {
     private String autor;
     private int copias;
     private Status status;
-    private String categoria;
+    private Categoria categoria;
 
-    public Livro(String nome, String autor, int copias, String categoria) {
+    public Livro(String nome, String autor, int copias, Categoria categoria) {
         super(contador++);
         this.nome = nome;
         this.autor = autor;
@@ -39,7 +34,7 @@ public class Livro extends Entidade {
         return status;
     }
 
-    public String getCategoria() {
+    public Categoria getCategoria() {
         return categoria;
     }
 
@@ -60,14 +55,14 @@ public class Livro extends Entidade {
         this.autor = autor;
     }
 
-    public void setCategoria(String categoria) {
+    public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }
 
     @Override
     public String getDescricao() {
         return "ID: " + id + " | Nome: " + nome + " | Autor: " + autor
-                + " | Categoria: " + categoria + " | Copias: " + copias
+                + " | Categoria: " + categoria.getNome() + " | Copias: " + copias
                 + " | Status: " + status;
     }
 }
