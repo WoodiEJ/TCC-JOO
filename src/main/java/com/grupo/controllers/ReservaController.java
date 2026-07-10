@@ -10,6 +10,7 @@ import com.grupo.models.Cliente;
 import com.grupo.models.Livro;
 import com.grupo.models.Reserva;
 import com.grupo.models.Status;
+import com.grupo.utils.ConsoleUtil;
 
 public class ReservaController {
     private LinkedList<Reserva> reservas = new LinkedList<>();
@@ -24,12 +25,11 @@ public class ReservaController {
     }
 
     private void listarReservas() {
+        ConsoleUtil.imprimirTitulo("RESERVAS CADASTRADAS");
         if (reservas.isEmpty()) {
             System.out.println("Nenhuma reserva encontrada.");
             return;
         }
-
-        System.out.println("\nAS RESERVAS CADASTRADAS");
         for (Reserva reserva : reservas) {
             System.out.println(reserva);
         }
@@ -63,13 +63,14 @@ public class ReservaController {
             try {
                 data = LocalDate.parse(texto, FORMATO);
             } catch (DateTimeParseException erro) {
-                System.out.println("Data invalida, tente novamente.");
+                System.out.println("Data inválida, tente novamente.");
             }
         }
         return data;
     }
 
     private void buscarReserva() {
+        ConsoleUtil.imprimirTitulo("BUSCAR RESERVA");
         System.out.println("Digite o ID da reserva: ");
         int id = lerInt();
 
@@ -87,7 +88,7 @@ public class ReservaController {
             return null;
         }
 
-        System.out.println("\n--- LIVROS DISPONIVEIS ---");
+        System.out.println("\n--- Livros disponíveis ---");
         for (Livro livro : livros) {
             System.out.println(livro);
         }
@@ -111,7 +112,7 @@ public class ReservaController {
             return null;
         }
 
-        System.out.println("\n--- CLIENTES CADASTRADOS ---");
+        System.out.println("\n--- Clientes cadastrados ---");
         for (Cliente cliente : clientes) {
             System.out.println(cliente);
         }
@@ -130,6 +131,8 @@ public class ReservaController {
     }
 
     private void registrarReserva() {
+        ConsoleUtil.imprimirTitulo("REGISTRAR RESERVA");
+
         if (livros.isEmpty()) {
             System.out.println("Nenhum livro cadastrado. Cadastre um livro antes de reservar.");
             return;
@@ -142,7 +145,7 @@ public class ReservaController {
 
         Livro livro = escolherLivro();
         if (livro == null) {
-            System.out.println("RESERVA CANCELADA. Este livro não existe");
+            System.out.println("Reserva cancelada. Este livro não existe.");
             return;
         }
 
@@ -153,7 +156,7 @@ public class ReservaController {
 
         Cliente cliente = escolherCliente();
         if (cliente == null) {
-            System.out.println("RESERVA CANCELADA. Este cliente não existe.");
+            System.out.println("Reserva cancelada. Este cliente não existe.");
             return;
         }
 
@@ -163,10 +166,12 @@ public class ReservaController {
         reservas.add(reserva);
 
         livro.setCopias(livro.getCopias() - 1);
-        System.out.println("Reserva registrada com sucesso! ID: " + reserva.getId());
+        System.out.println("\nReserva registrada com sucesso! ID: " + reserva.getId());
     }
 
     private void editarReserva() {
+        ConsoleUtil.imprimirTitulo("EDITAR RESERVA");
+
         System.out.println("Digite o ID da reserva que deseja editar: ");
         int id = lerInt();
 
@@ -191,10 +196,12 @@ public class ReservaController {
             reserva.setDataEmprestimo(novaData);
         }
 
-        System.out.println("Reserva atualizada com sucesso.");
+        System.out.println("\nReserva atualizada com sucesso.");
     }
 
     private void devolverLivro() {
+        ConsoleUtil.imprimirTitulo("DEVOLVER LIVRO");
+
         System.out.println("Digite o ID da reserva que deseja devolver: ");
         int id = lerInt();
 
@@ -217,10 +224,12 @@ public class ReservaController {
             livro.setCopias(livro.getCopias() + 1);
         }
 
-        System.out.println("Livro devolvido com sucesso!");
+        System.out.println("\nLivro devolvido com sucesso!");
     }
 
     private void deletarReserva() {
+        ConsoleUtil.imprimirTitulo("DELETAR RESERVA");
+
         System.out.println("Digite o ID da reserva que deseja deletar: ");
         int id = lerInt();
 
@@ -253,7 +262,8 @@ public class ReservaController {
     public void menuReserva() {
         int opcao;
         do {
-            System.out.println("\n===== RESERVAS =====");
+            ConsoleUtil.limparTela();
+            ConsoleUtil.imprimirTitulo("RESERVAS");
             System.out.println("1 - Listar");
             System.out.println("2 - Buscar");
             System.out.println("3 - Registrar");
@@ -264,6 +274,7 @@ public class ReservaController {
             System.out.println("Escolha uma opção: ");
 
             opcao = lerInt();
+            System.out.println();
 
             switch (opcao) {
                 case 1 -> listarReservas();
@@ -274,6 +285,10 @@ public class ReservaController {
                 case 6 -> devolverLivro();
                 case 0 -> System.out.println("Voltando...");
                 default -> System.out.println("Opção inválida.");
+            }
+
+            if (opcao != 0) {
+                ConsoleUtil.pausar(teclado);
             }
         } while (opcao != 0);
     }

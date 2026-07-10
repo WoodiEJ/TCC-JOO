@@ -5,6 +5,7 @@ import com.grupo.controllers.ReservaController;
 import com.grupo.models.Categoria;
 import com.grupo.models.Cliente;
 import com.grupo.models.Livro;
+import com.grupo.utils.ConsoleUtil;
 
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -12,21 +13,25 @@ import java.util.Scanner;
 public class Main {
 
     static Scanner teclado = new Scanner(System.in);
-    static LinkedList<Categoria> categorias = new LinkedList<>();
-    static LinkedList<Livro> livros;
-    static LinkedList<Cliente> clientes;
 
-    static LivroController livroController = new LivroController(categorias);
+    // Listas compartilhadas entre os controllers
+    static LinkedList<Categoria> categorias = new LinkedList<>();
+    static LinkedList<Livro> livros = new LinkedList<>();
+    static LinkedList<Cliente> clientes = new LinkedList<>();
+
+    static LivroController livroController = new LivroController(livros, categorias);
     static ReservaController reservaController = new ReservaController(livros, clientes);
 
     public static void main(String[] args) {
         int opcao;
 
         do {
+            ConsoleUtil.limparTela();
             exibirMenu();
             System.out.println("Escolha uma opção: ");
             opcao = teclado.nextInt();
             teclado.nextLine(); // limpa o \n que sobra no buffer
+            System.out.println();
 
             switch (opcao) {
                 case 1:
@@ -46,10 +51,9 @@ public class Main {
                     break;
                 default:
                     System.out.println("Opcao invalida! Tente novamente.");
+                    ConsoleUtil.pausar(teclado);
                     break;
             }
-
-            System.out.println();
 
         } while (opcao != 0);
 
@@ -57,12 +61,11 @@ public class Main {
     }
 
     static void exibirMenu() {
-        System.out.println("===== BIBLIOTECA - MENU =====");
+        ConsoleUtil.imprimirTitulo("BIBLIOTECA - MENU");
         System.out.println("1 - Livros");
         System.out.println("2 - Clientes");
         System.out.println("3 - Categorias");
         System.out.println("4 - Reservas");
         System.out.println("0 - Sair");
-        System.out.println("==============================");
     }
 }

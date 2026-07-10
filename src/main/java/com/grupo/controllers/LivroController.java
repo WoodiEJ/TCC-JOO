@@ -5,22 +5,24 @@ import java.util.Scanner;
 
 import com.grupo.models.Categoria;
 import com.grupo.models.Livro;
+import com.grupo.utils.ConsoleUtil;
 
 public class LivroController {
-    private LinkedList<Livro> livros = new LinkedList<>();
+    private LinkedList<Livro> livros;
     private LinkedList<Categoria> categorias;
     private Scanner teclado = new Scanner(System.in);
 
-    public LivroController(LinkedList<Categoria> categorias) {
+    public LivroController(LinkedList<Livro> livros, LinkedList<Categoria> categorias) {
+        this.livros = livros;
         this.categorias = categorias;
     }
 
     private void listar() {
+        ConsoleUtil.imprimirTitulo("LIVROS CADASTRADOS");
         if (livros.isEmpty()) {
             System.out.println("Nenhum livro encontrado.");
             return;
         }
-        System.out.println("\nOS LIVROS DISPONIVEIS");
         for (Livro livro : livros) {
             System.out.println(livro);
         }
@@ -46,6 +48,7 @@ public class LivroController {
     }
 
     private void buscarLivro() {
+        ConsoleUtil.imprimirTitulo("BUSCAR LIVRO");
         System.out.println("Digite o ID do livro: ");
         int id = lerInt();
 
@@ -63,7 +66,7 @@ public class LivroController {
             return null;
         }
 
-        System.out.println("\n--- CATEGORIA DISPONIVEIS ---");
+        System.out.println("\n--- Categorias disponíveis ---");
         for (Categoria categoria : categorias) {
             System.out.println(categoria);
         }
@@ -82,6 +85,8 @@ public class LivroController {
     }
 
     private void registrarLivro() {
+        ConsoleUtil.imprimirTitulo("REGISTRAR LIVRO");
+
         if (categorias.isEmpty()) {
             System.out.println("Nenhuma categoria cadastrada. Cadastre uma categoria antes de registrar um livro.");
             return;
@@ -98,17 +103,19 @@ public class LivroController {
 
         Categoria categoria = escolherCategoria();
         if (categoria == null) {
-            System.out.println("Registro Cancelado.");
+            System.out.println("Registro cancelado.");
             return;
         }
 
         Livro livro = new Livro(nome, autor, copias, categoria);
         livros.add(livro);
 
-        System.out.println("Livro registrado com sucesso! ID: " + livro.getId());
+        System.out.println("\nLivro registrado com sucesso! ID: " + livro.getId());
     }
 
     private void editarLivro() {
+        ConsoleUtil.imprimirTitulo("EDITAR LIVRO");
+
         System.out.println("Digite o ID que deseja editar: ");
         int id = lerInt();
 
@@ -120,7 +127,7 @@ public class LivroController {
 
         System.out.println("Deixe em branco para manter o valor atual.");
 
-        System.out.println("Nome: (" + livro.getNome() + "): ");
+        System.out.println("Nome (" + livro.getNome() + "): ");
         String nome = teclado.nextLine();
         if (!nome.isBlank()) {
             livro.setNome(nome);
@@ -138,11 +145,11 @@ public class LivroController {
             try {
                 livro.setCopias(Integer.parseInt(copiasEmString));
             } catch (NumberFormatException erro) {
-                System.out.println("Valor invalido, copias não alterada.");
+                System.out.println("Valor inválido, cópias não alterada.");
             }
         }
 
-        System.out.println("Deseja alter a categoria (" + livro.getCategoria().getNome() + ")? (Sim/Nao): ");
+        System.out.println("Deseja alterar a categoria (" + livro.getCategoria().getNome() + ")? (Sim/Nao): ");
         String resposta = teclado.nextLine();
         if (resposta.equalsIgnoreCase("Sim")) {
             Categoria categoria = escolherCategoria();
@@ -150,10 +157,13 @@ public class LivroController {
                 livro.setCategoria(categoria);
             }
         }
-        System.out.println("Livro atualizado com sucesso.");
+
+        System.out.println("\nLivro atualizado com sucesso.");
     }
 
     private void deletarLivro() {
+        ConsoleUtil.imprimirTitulo("DELETAR LIVRO");
+
         System.out.println("Digite o ID do livro que deseja deletar: ");
         int id = lerInt();
 
@@ -170,7 +180,8 @@ public class LivroController {
     public void menuLivro() {
         int opcao;
         do {
-            System.out.println("\n===== LIVROS =====");
+            ConsoleUtil.limparTela();
+            ConsoleUtil.imprimirTitulo("LIVROS");
             System.out.println("1 - Listar");
             System.out.println("2 - Buscar");
             System.out.println("3 - Registrar");
@@ -180,6 +191,7 @@ public class LivroController {
             System.out.println("Escolha uma opção: ");
 
             opcao = lerInt();
+            System.out.println();
 
             switch (opcao) {
                 case 1 -> listar();
@@ -189,6 +201,10 @@ public class LivroController {
                 case 5 -> deletarLivro();
                 case 0 -> System.out.println("Voltando...");
                 default -> System.out.println("Opção inválida.");
+            }
+
+            if (opcao != 0) {
+                ConsoleUtil.pausar(teclado);
             }
         } while (opcao != 0);
     }
