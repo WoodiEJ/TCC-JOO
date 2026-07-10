@@ -1,5 +1,6 @@
 package com.grupo;
 
+import com.grupo.controllers.ClienteController;
 import com.grupo.controllers.LivroController;
 import com.grupo.controllers.ReservaController;
 import com.grupo.models.Categoria;
@@ -13,14 +14,13 @@ import java.util.Scanner;
 public class Main {
 
     static Scanner teclado = new Scanner(System.in);
-
-    // Listas compartilhadas entre os controllers
     static LinkedList<Categoria> categorias = new LinkedList<>();
     static LinkedList<Livro> livros = new LinkedList<>();
     static LinkedList<Cliente> clientes = new LinkedList<>();
 
     static LivroController livroController = new LivroController(livros, categorias);
     static ReservaController reservaController = new ReservaController(livros, clientes);
+    static ClienteController clienteController = new ClienteController(clientes);
 
     public static void main(String[] args) {
         int opcao;
@@ -30,7 +30,7 @@ public class Main {
             exibirMenu();
             System.out.println("Escolha uma opção: ");
             opcao = teclado.nextInt();
-            teclado.nextLine(); // limpa o \n que sobra no buffer
+            teclado.nextLine();
             System.out.println();
 
             switch (opcao) {
@@ -38,7 +38,7 @@ public class Main {
                     livroController.menuLivro();
                     break;
                 case 2:
-                    // TODO: ClienteController
+                    clienteController.menuCliente();
                     break;
                 case 3:
                     // TODO: CategoriaController
