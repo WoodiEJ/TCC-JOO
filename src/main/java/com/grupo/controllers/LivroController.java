@@ -1,16 +1,16 @@
 package com.grupo.controllers;
 
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.LinkedList; // LINKEDLIST
+import java.util.TreeMap;
 
 import com.grupo.models.Categoria;
 import com.grupo.models.Livro;
 import com.grupo.utils.ConsoleUtil;
+import com.grupo.utils.Historico;
 
 public class LivroController {
     private LinkedList<Livro> livros;
     private LinkedList<Categoria> categorias;
-    private Scanner teclado = new Scanner(System.in);
 
     public LivroController(LinkedList<Livro> livros, LinkedList<Categoria> categorias) {
         this.livros = livros;
@@ -18,13 +18,18 @@ public class LivroController {
     }
 
     private void listar() {
-        ConsoleUtil.imprimirTitulo("LIVROS CADASTRADOS");
+        ConsoleUtil.imprimirTitulo("LIVROS");
         if (livros.isEmpty()) {
             System.out.println("Nenhum livro encontrado.");
             return;
         }
+        TreeMap<String, Livro> livrosOrdenados = new TreeMap<>();
         for (Livro livro : livros) {
-            System.out.println(livro);
+            livrosOrdenados.put(livro.getNome() + " #" + livro.getId(), livro);
+        }
+
+        for (String chave : livrosOrdenados.keySet()) {
+            System.out.println(livrosOrdenados.get(chave));
         }
     }
 
@@ -37,20 +42,10 @@ public class LivroController {
         return null;
     }
 
-    private int lerInt() {
-        while (!teclado.hasNextInt()) {
-            System.out.println("Digite um numero valido: ");
-            teclado.next();
-        }
-        int valor = teclado.nextInt();
-        teclado.nextLine();
-        return valor;
-    }
-
     private void buscarLivro() {
         ConsoleUtil.imprimirTitulo("BUSCAR LIVRO");
         System.out.println("Digite o ID do livro: ");
-        int id = lerInt();
+        int id = ConsoleUtil.lerInt();
 
         Livro livro = buscarPorId(id);
         if (livro == null) {
@@ -72,7 +67,7 @@ public class LivroController {
         }
 
         System.out.println("Digite o ID da categoria: ");
-        int id = lerInt();
+        int id = ConsoleUtil.lerInt();
 
         for (Categoria categoria : categorias) {
             if (categoria.getId() == id) {
@@ -93,13 +88,13 @@ public class LivroController {
         }
 
         System.out.println("Nome: ");
-        String nome = teclado.nextLine();
+        String nome = ConsoleUtil.teclado.nextLine();
 
         System.out.println("Autor: ");
-        String autor = teclado.nextLine();
+        String autor = ConsoleUtil.teclado.nextLine();
 
         System.out.println("Copias: ");
-        int copias = lerInt();
+        int copias = ConsoleUtil.lerInt();
 
         Categoria categoria = escolherCategoria();
         if (categoria == null) {
@@ -110,6 +105,7 @@ public class LivroController {
         Livro livro = new Livro(nome, autor, copias, categoria);
         livros.add(livro);
 
+        Historico.registrar("Livro registrado: " + livro.getNome() + " (ID " + livro.getId() + ")");
         System.out.println("\nLivro registrado com sucesso! ID: " + livro.getId());
     }
 
@@ -117,7 +113,7 @@ public class LivroController {
         ConsoleUtil.imprimirTitulo("EDITAR LIVRO");
 
         System.out.println("Digite o ID que deseja editar: ");
-        int id = lerInt();
+        int id = ConsoleUtil.lerInt();
 
         Livro livro = buscarPorId(id);
         if (livro == null) {
@@ -128,19 +124,19 @@ public class LivroController {
         System.out.println("Deixe em branco para manter o valor atual.");
 
         System.out.println("Nome (" + livro.getNome() + "): ");
-        String nome = teclado.nextLine();
+        String nome = ConsoleUtil.teclado.nextLine();
         if (!nome.isBlank()) {
             livro.setNome(nome);
         }
 
         System.out.println("Autor (" + livro.getAutor() + "): ");
-        String autor = teclado.nextLine();
+        String autor = ConsoleUtil.teclado.nextLine();
         if (!autor.isBlank()) {
             livro.setAutor(autor);
         }
 
         System.out.println("Copias (" + livro.getCopias() + "): ");
-        String copiasEmString = teclado.nextLine();
+        String copiasEmString = ConsoleUtil.teclado.nextLine();
         if (!copiasEmString.isBlank()) {
             try {
                 livro.setCopias(Integer.parseInt(copiasEmString));
@@ -150,7 +146,7 @@ public class LivroController {
         }
 
         System.out.println("Deseja alterar a categoria (" + livro.getCategoria().getNome() + ")? (Sim/Nao): ");
-        String resposta = teclado.nextLine();
+        String resposta = ConsoleUtil.teclado.nextLine();
         if (resposta.equalsIgnoreCase("Sim")) {
             Categoria categoria = escolherCategoria();
             if (categoria != null) {
@@ -158,6 +154,7 @@ public class LivroController {
             }
         }
 
+        Historico.registrar("Livro editado: " + livro.getNome() + " (ID " + livro.getId() + ")");
         System.out.println("\nLivro atualizado com sucesso.");
     }
 
@@ -165,7 +162,7 @@ public class LivroController {
         ConsoleUtil.imprimirTitulo("DELETAR LIVRO");
 
         System.out.println("Digite o ID do livro que deseja deletar: ");
-        int id = lerInt();
+        int id = ConsoleUtil.lerInt();
 
         Livro livro = buscarPorId(id);
         if (livro == null) {
@@ -174,6 +171,7 @@ public class LivroController {
         }
 
         livros.remove(livro);
+        Historico.registrar("Livro deletado: " + livro.getNome() + " (ID " + livro.getId() + ")");
         System.out.println("Livro deletado com sucesso.");
     }
 
@@ -190,7 +188,7 @@ public class LivroController {
             System.out.println("0 - Voltar");
             System.out.println("Escolha uma opção: ");
 
-            opcao = lerInt();
+            opcao = ConsoleUtil.lerInt();
             System.out.println();
 
             switch (opcao) {
@@ -204,7 +202,7 @@ public class LivroController {
             }
 
             if (opcao != 0) {
-                ConsoleUtil.pausar(teclado);
+                ConsoleUtil.pausar();
             }
         } while (opcao != 0);
     }

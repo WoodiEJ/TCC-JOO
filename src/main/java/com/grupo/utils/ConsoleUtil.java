@@ -5,6 +5,7 @@ import java.util.Scanner;
 public class ConsoleUtil {
 
     private static final int LARGURA = 40;
+    public static Scanner teclado = new Scanner(System.in);
 
     public static void limparTela() {
         try {
@@ -18,9 +19,19 @@ public class ConsoleUtil {
         }
     }
 
-    public static void pausar(Scanner teclado) {
+    public static void pausar() {
         System.out.println("\nPressione ENTER para continuar...");
         teclado.nextLine();
+    }
+
+    public static int lerInt() {
+        while (!teclado.hasNextInt()) {
+            System.out.println("Digite um numero valido: ");
+            teclado.next();
+        }
+        int valor = teclado.nextInt();
+        teclado.nextLine();
+        return valor;
     }
 
     public static void imprimirTitulo(String titulo) {

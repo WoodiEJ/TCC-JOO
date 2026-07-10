@@ -1,5 +1,8 @@
 package com.grupo.models;
 
+import java.util.LinkedList;
+import java.util.Queue;
+
 public class Livro extends Entidade {
     private static int contador = 1;
 
@@ -8,6 +11,7 @@ public class Livro extends Entidade {
     private int copias;
     private Status status;
     private Categoria categoria;
+    private Queue<Cliente> filaEspera = new LinkedList<>();
 
     public Livro(String nome, String autor, int copias, Categoria categoria) {
         super(contador++);
@@ -59,10 +63,31 @@ public class Livro extends Entidade {
         this.categoria = categoria;
     }
 
+    public boolean temFilaDeEspera() {
+        return !filaEspera.isEmpty();
+    }
+
+    public int tamanhoFilaEspera() {
+        return filaEspera.size();
+    }
+
+    public void entrarNaFila(Cliente cliente) {
+        filaEspera.offer(cliente);
+    }
+
+    public Cliente proximoDaFila() {
+        return filaEspera.poll();
+    }
+
+    public Cliente verProximoDaFila() {
+        return filaEspera.peek();
+    }
+
     @Override
     public String getDescricao() {
+        String filaInfo = temFilaDeEspera() ? " | Fila de espera: " + tamanhoFilaEspera() : "";
         return "ID: " + id + " | Nome: " + nome + " | Autor: " + autor
                 + " | Categoria: " + categoria.getNome() + " | Copias: " + copias
-                + " | Status: " + status;
+                + " | Status: " + status + filaInfo;
     }
 }

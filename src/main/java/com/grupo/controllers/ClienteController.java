@@ -1,27 +1,33 @@
 package com.grupo.controllers;
 
-import java.util.LinkedList;
-import java.util.Scanner;
+import java.util.LinkedList; // LINKEDLIST
+import java.util.TreeMap;
 
 import com.grupo.models.Cliente;
 import com.grupo.utils.ConsoleUtil;
+import com.grupo.utils.Historico;
 
 public class ClienteController {
     private LinkedList<Cliente> clientes;
-    private Scanner teclado = new Scanner(System.in);
 
     public ClienteController(LinkedList<Cliente> clientes) {
         this.clientes = clientes;
     }
 
     private void listar() {
-        ConsoleUtil.imprimirTitulo("CLIENTES CADASTRADOS");
+        ConsoleUtil.imprimirTitulo("CLIENTES");
         if (clientes.isEmpty()) {
             System.out.println("Nenhum cliente encontrado.");
             return;
         }
+
+        TreeMap<String, Cliente> clientesOrdenados = new TreeMap<>();
         for (Cliente cliente : clientes) {
-            System.out.println(cliente);
+            clientesOrdenados.put(cliente.getNome() + " #" + cliente.getId(), cliente);
+        }
+
+        for (String chave : clientesOrdenados.keySet()) {
+            System.out.println(clientesOrdenados.get(chave));
         }
     }
 
@@ -34,20 +40,10 @@ public class ClienteController {
         return null;
     }
 
-    private int lerInt() {
-        while (!teclado.hasNextInt()) {
-            System.out.println("Digite um numero valido: ");
-            teclado.next();
-        }
-        int valor = teclado.nextInt();
-        teclado.nextLine();
-        return valor;
-    }
-
     private void buscarCliente() {
         ConsoleUtil.imprimirTitulo("BUSCAR CLIENTE");
         System.out.println("Digite o ID do cliente: ");
-        int id = lerInt();
+        int id = ConsoleUtil.lerInt();
 
         Cliente cliente = buscarPorId(id);
         if (cliente == null) {
@@ -61,14 +57,15 @@ public class ClienteController {
         ConsoleUtil.imprimirTitulo("REGISTRAR CLIENTE");
 
         System.out.println("Nome: ");
-        String nome = teclado.nextLine();
+        String nome = ConsoleUtil.teclado.nextLine();
 
         System.out.println("CPF: ");
-        String cpf = teclado.nextLine();
+        String cpf = ConsoleUtil.teclado.nextLine();
 
         Cliente cliente = new Cliente(nome, cpf);
         clientes.add(cliente);
 
+        Historico.registrar("Cliente registrado: " + cliente.getNome() + " (ID " + cliente.getId() + ")");
         System.out.println("\nCliente registrado com sucesso! ID: " + cliente.getId());
     }
 
@@ -76,7 +73,7 @@ public class ClienteController {
         ConsoleUtil.imprimirTitulo("EDITAR CLIENTE");
 
         System.out.println("Digite o ID do cliente que deseja editar: ");
-        int id = lerInt();
+        int id = ConsoleUtil.lerInt();
 
         Cliente cliente = buscarPorId(id);
         if (cliente == null) {
@@ -87,17 +84,18 @@ public class ClienteController {
         System.out.println("Deixe em branco para manter o valor atual.");
 
         System.out.println("Nome (" + cliente.getNome() + "): ");
-        String nome = teclado.nextLine();
+        String nome = ConsoleUtil.teclado.nextLine();
         if (!nome.isBlank()) {
             cliente.setNome(nome);
         }
 
         System.out.println("CPF (" + cliente.getCpf() + "): ");
-        String cpf = teclado.nextLine();
+        String cpf = ConsoleUtil.teclado.nextLine();
         if (!cpf.isBlank()) {
             cliente.setCpf(cpf);
         }
 
+        Historico.registrar("Cliente editado: " + cliente.getNome() + " (ID " + cliente.getId() + ")");
         System.out.println("\nCliente atualizado com sucesso.");
     }
 
@@ -105,7 +103,7 @@ public class ClienteController {
         ConsoleUtil.imprimirTitulo("DELETAR CLIENTE");
 
         System.out.println("Digite o ID do cliente que deseja deletar: ");
-        int id = lerInt();
+        int id = ConsoleUtil.lerInt();
 
         Cliente cliente = buscarPorId(id);
         if (cliente == null) {
@@ -114,12 +112,13 @@ public class ClienteController {
         }
 
         clientes.remove(cliente);
+        Historico.registrar("Cliente deletado: " + cliente.getNome() + " (ID " + cliente.getId() + ")");
         System.out.println("Cliente deletado com sucesso.");
     }
 
     public void menuCliente() {
         int opcao;
-        do {
+        do { // DO-WHILE
             ConsoleUtil.limparTela();
             ConsoleUtil.imprimirTitulo("CLIENTES");
             System.out.println("1 - Listar");
@@ -130,7 +129,7 @@ public class ClienteController {
             System.out.println("0 - Voltar");
             System.out.println("Escolha uma opção: ");
 
-            opcao = lerInt();
+            opcao = ConsoleUtil.lerInt();
             System.out.println();
 
             switch (opcao) {
@@ -144,7 +143,7 @@ public class ClienteController {
             }
 
             if (opcao != 0) {
-                ConsoleUtil.pausar(teclado);
+                ConsoleUtil.pausar();
             }
         } while (opcao != 0);
     }
