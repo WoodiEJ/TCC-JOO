@@ -1,7 +1,5 @@
 package com.grupo;
 
-import java.util.LinkedList;
-
 import com.grupo.controllers.CategoriaController;
 import com.grupo.controllers.ClienteController;
 import com.grupo.controllers.LivroController;
@@ -13,18 +11,22 @@ import com.grupo.seed.Seed;
 import com.grupo.utils.ConsoleUtil;
 import com.grupo.utils.Historico;
 
+import java.util.LinkedList;
+
 public class Main {
+
     static LinkedList<Categoria> categorias = new LinkedList<>();
     static LinkedList<Livro> livros = new LinkedList<>();
     static LinkedList<Cliente> clientes = new LinkedList<>();
 
     static LivroController livroController = new LivroController(livros, categorias);
     static ClienteController clienteController = new ClienteController(clientes);
-    static CategoriaController categoriaController = new CategoriaController(categorias);
+    static CategoriaController categoriaController = new CategoriaController(categorias, livros);
     static ReservaController reservaController = new ReservaController(livros, clientes);
 
     public static void main(String[] args) {
         Seed.popular(categorias, livros, clientes);
+
         int opcao;
 
         do {

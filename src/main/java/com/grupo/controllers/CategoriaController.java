@@ -4,31 +4,33 @@ import java.util.LinkedList;
 import java.util.TreeMap;
 
 import com.grupo.models.Categoria;
+import com.grupo.models.Livro;
 import com.grupo.utils.ConsoleUtil;
 import com.grupo.utils.Historico;
 
 public class CategoriaController {
     private LinkedList<Categoria> categorias;
+    private LinkedList<Livro> livros;
 
-    public CategoriaController(LinkedList<Categoria> categorias) {
+    public CategoriaController(LinkedList<Categoria> categorias, LinkedList<Livro> livros) {
         this.categorias = categorias;
-        ;
+        this.livros = livros;
     }
 
     private void listar() {
-        ConsoleUtil.imprimirTitulo("CATEGORIAS");
+        ConsoleUtil.imprimirTitulo("CATEGORIAS (ORDEM ALFABÉTICA)");
         if (categorias.isEmpty()) {
             System.out.println("Nenhuma categoria encontrada.");
             return;
         }
 
-        TreeMap<String, Categoria> categoriasEmOrdem = new TreeMap<>();
+        TreeMap<String, Categoria> categoriasOrdenadas = new TreeMap<>();
         for (Categoria categoria : categorias) {
-            categoriasEmOrdem.put(categoria.getNome() + " #" + categoria.getId(), categoria);
+            categoriasOrdenadas.put(categoria.getNome() + " #" + categoria.getId(), categoria);
         }
 
-        for (String chave : categoriasEmOrdem.keySet()) {
-            System.out.println(categoriasEmOrdem.get(chave));
+        for (String chave : categoriasOrdenadas.keySet()) {
+            System.out.println(categoriasOrdenadas.get(chave));
         }
     }
 
@@ -38,7 +40,6 @@ public class CategoriaController {
                 return categoria;
             }
         }
-
         return null;
     }
 
@@ -94,6 +95,7 @@ public class CategoriaController {
 
     private void deletarCategoria() {
         ConsoleUtil.imprimirTitulo("DELETAR CATEGORIA");
+
         System.out.println("Digite o ID da categoria que deseja deletar: ");
         int id = ConsoleUtil.lerInt();
 
@@ -108,6 +110,53 @@ public class CategoriaController {
         System.out.println("Categoria deletada com sucesso.");
     }
 
+    private void listarLivrosDaCategoria() {
+        ConsoleUtil.imprimirTitulo("LIVROS POR CATEGORIA");
+
+        Categoria categoria = buscarCategoriaParaFiltro();
+        if (categoria == null) {
+            return;
+        }
+
+        TreeMap<String, Livro> livrosDaCategoria = new TreeMap<>();
+        for (Livro livro : livros) {
+            if (livro.getCategoria().getId() == categoria.getId()) {
+                livrosDaCategoria.put(livro.getNome() + " #" + livro.getId(), livro);
+            }
+        }
+
+        System.out.println("\n--- Livros na categoria: " + categoria.getNome() + " ---");
+        if (livrosDaCategoria.isEmpty()) {
+            System.out.println("Nenhum livro encontrado nessa categoria.");
+            return;
+        }
+
+        for (String chave : livrosDaCategoria.keySet()) {
+            System.out.println(livrosDaCategoria.get(chave));
+        }
+    }
+
+    private Categoria buscarCategoriaParaFiltro() {
+        if (categorias.isEmpty()) {
+            System.out.println("Nenhuma categoria cadastrada.");
+            return null;
+        }
+
+        System.out.println("\n--- Categorias disponíveis ---");
+        for (Categoria categoria : categorias) {
+            System.out.println(categoria);
+        }
+
+        System.out.println("Digite o ID da categoria: ");
+        int id = ConsoleUtil.lerInt();
+
+        Categoria categoria = buscarPorId(id);
+        if (categoria == null) {
+            System.out.println("Categoria não encontrada.");
+        }
+        return categoria;
+    }
+
     public void menuCategoria() {
         int opcao;
         do {
@@ -118,6 +167,7 @@ public class CategoriaController {
             System.out.println("3 - Registrar");
             System.out.println("4 - Editar");
             System.out.println("5 - Deletar");
+            System.out.println("6 - Listar Livros da Categoria");
             System.out.println("0 - Voltar");
             System.out.println("Escolha uma opção: ");
 
@@ -130,6 +180,7 @@ public class CategoriaController {
                 case 3 -> registrarCategoria();
                 case 4 -> editarCategoria();
                 case 5 -> deletarCategoria();
+                case 6 -> listarLivrosDaCategoria();
                 case 0 -> System.out.println("Voltando...");
                 default -> System.out.println("Opção inválida.");
             }

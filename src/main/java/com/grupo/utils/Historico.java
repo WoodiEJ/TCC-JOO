@@ -17,12 +17,11 @@ public class Historico {
     public static void mostrar() {
         ConsoleUtil.imprimirTitulo("HISTÓRICO DE AÇÕES");
 
-        if (acoes.isEmpty()) { // STACK: isEmpty
+        if (acoes.isEmpty()) {
             System.out.println("Nenhuma ação registrada ainda.");
             return;
         }
 
-        System.out.println("(mais recente primeiro)\n");
         for (int i = acoes.size() - 1; i >= 0; i--) {
             System.out.println(acoes.get(i));
         }
