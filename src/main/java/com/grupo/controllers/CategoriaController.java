@@ -18,7 +18,7 @@ public class CategoriaController {
     }
 
     private void listar() {
-        ConsoleUtil.imprimirTitulo("CATEGORIAS (ORDEM ALFABÉTICA)");
+        ConsoleUtil.imprimirTitulo("CATEGORIAS");
         if (categorias.isEmpty()) {
             System.out.println("Nenhuma categoria encontrada.");
             return;

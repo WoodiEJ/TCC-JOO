@@ -1,6 +1,6 @@
 package com.grupo.controllers;
 
-import java.util.LinkedList; // LINKEDLIST
+import java.util.LinkedList;
 import java.util.TreeMap;
 
 import com.grupo.models.Categoria;
