@@ -227,8 +227,10 @@ public class ReservaController {
             livro.setCopias(livro.getCopias() + 1);
             Historico.registrar("Livro devolvido: " + livro.getNome() + " (reserva ID " + reserva.getId() + ")");
 
+            // QUEUE: se alguem estava esperando esse livro, a copia que acabou de voltar
+            // ja sai reservada automaticamente pro proximo da fila
             if (livro.temFilaDeEspera()) {
-                Cliente proximo = livro.proximoDaFila();
+                Cliente proximo = livro.proximoDaFila(); // QUEUE: poll
                 Reserva novaReserva = new Reserva(livro.getId(), proximo.getId(), LocalDate.now(), null);
                 reservas.add(novaReserva);
                 livro.setCopias(livro.getCopias() - 1);
@@ -262,9 +264,47 @@ public class ReservaController {
             }
         }
 
-        reservas.remove(reserva);
+        reservas.remove(reserva); // LINKEDLIST: remove
         Historico.registrar("Reserva deletada: ID " + reserva.getId());
         System.out.println("Reserva deletada com sucesso.");
+    }
+
+    private void verFilaDeEspera() {
+        ConsoleUtil.imprimirTitulo("FILA DE ESPERA DE UM LIVRO");
+
+        Livro livro = escolherLivro();
+        if (livro == null) {
+            return;
+        }
+
+        if (!livro.temFilaDeEspera()) {
+            System.out.println("\nEsse livro não tem fila de espera no momento.");
+            return;
+        }
+
+        System.out.println("\n--- Fila de espera: " + livro.getNome() + " ---");
+        int posicao = 1;
+        for (Cliente cliente : livro.getFilaEspera()) {
+            System.out.println(posicao + "º - " + cliente.getNome() + " (CPF: " + cliente.getCpf() + ")");
+            posicao++;
+        }
+    }
+
+    private void listarLivrosComFilaDeEspera() {
+        ConsoleUtil.imprimirTitulo("LIVROS COM FILA DE ESPERA");
+
+        boolean encontrou = false;
+        for (Livro livro : livros) {
+            if (livro.temFilaDeEspera()) {
+                System.out.println(livro.getNome() + " - " + livro.tamanhoFilaEspera() + " cliente(s) esperando"
+                        + " (próximo: " + livro.verProximoDaFila().getNome() + ")");
+                encontrou = true;
+            }
+        }
+
+        if (!encontrou) {
+            System.out.println("Nenhum livro com fila de espera no momento.");
+        }
     }
 
     private Livro buscarLivroPorId(int id) {
@@ -287,6 +327,8 @@ public class ReservaController {
             System.out.println("4 - Editar");
             System.out.println("5 - Deletar");
             System.out.println("6 - Devolver Livro");
+            System.out.println("7 - Ver Fila de Espera de um Livro");
+            System.out.println("8 - Livros com Fila de Espera");
             System.out.println("0 - Voltar");
             System.out.println("Escolha uma opção: ");
 
@@ -300,6 +342,8 @@ public class ReservaController {
                 case 4 -> editarReserva();
                 case 5 -> deletarReserva();
                 case 6 -> devolverLivro();
+                case 7 -> verFilaDeEspera();
+                case 8 -> listarLivrosComFilaDeEspera();
                 case 0 -> System.out.println("Voltando...");
                 default -> System.out.println("Opção inválida.");
             }

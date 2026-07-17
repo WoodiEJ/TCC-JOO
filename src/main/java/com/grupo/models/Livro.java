@@ -83,6 +83,10 @@ public class Livro extends Entidade {
         return filaEspera.peek();
     }
 
+    public Queue<Cliente> getFilaEspera() {
+        return new LinkedList<>(filaEspera);
+    }
+
     @Override
     public String getDescricao() {
         String filaInfo = temFilaDeEspera() ? " | Fila de espera: " + tamanhoFilaEspera() : "";
